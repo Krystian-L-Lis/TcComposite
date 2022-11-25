@@ -23,7 +23,10 @@ The main objectives of this program are:
     
     
  Planned features:
-  - Observer Pattern. Example: EL1008[4].Attach_Sub(GVL.Tank.Get_Child('lvl_low')); OR F_Attach_Sub(EL1008[4], GVL.Tank.Get_Child('lvl_low'));
+  - Observer Pattern. 
+    Example: EL1008[4].Attach_Sub(GVL.Tank.Get_Child('lvl_low'));
+    F_Attach_Sub(GVL.Pump.Get_Child('Pub'), GVL.Tank.Get_Child('pump'));
+    
   - Objects don't need to be called in every iteration, but some do. Create a dynamic object list that holds only currently executed objects, such as timers, etc.
     Remove them from the list after execution.
   - Better logs
