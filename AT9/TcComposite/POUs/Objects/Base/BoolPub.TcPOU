@@ -10,7 +10,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[//Work in progress]]></ST>
     </Implementation>
     <Method Name="Attach_Sub" Id="{b77e8169-6f7d-4619-a088-a9d809e4fcc2}">
       <Declaration><![CDATA[METHOD Attach_Sub

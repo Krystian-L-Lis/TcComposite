@@ -1,7 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <DUT Name="ST_PID" Id="{48172188-bde8-4bba-b163-b7538b6cd70e}">
-    <Declaration><![CDATA[TYPE ST_PID :
+    <Declaration><![CDATA[//Test structure
+//Check if object can ignore struct types when trying to find its parent
+// Parent
+//	-Struct
+//	--Child 1
+//	--Child 2
+//	--Child 3
+//Struct should be ignored and child should be added directly to the parent
+
+
+TYPE ST_PID :
 STRUCT
 	p: RealParam;
 	i: RealParam;

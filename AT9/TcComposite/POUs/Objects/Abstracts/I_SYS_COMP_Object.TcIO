@@ -2,6 +2,8 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <Itf Name="I_SYS_COMP_Object" Id="{bdc50733-b447-422f-ad91-64ed9a35a495}">
     <Declaration><![CDATA[INTERFACE I_SYS_COMP_Object EXTENDS I_Label
+
+//System interface, shouldn't be modified
 ]]></Declaration>
     <Method Name="_SYS_COMP_Add_Child_" Id="{c20012f3-79ec-49bd-85a7-158df27eb97e}">
       <Declaration><![CDATA[METHOD _SYS_COMP_Add_Child_

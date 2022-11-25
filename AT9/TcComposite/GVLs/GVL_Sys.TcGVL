@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <GVL Name="GVL_Sys" Id="{4e67ab74-6b7c-4b72-803a-1e3548a94041}">
-    <Declaration><![CDATA[{attribute 'qualified_only'}
+    <Declaration><![CDATA[//Test GVL
+{attribute 'qualified_only'}
 VAR_GLOBAL
 END_VAR]]></Declaration>
   </GVL>

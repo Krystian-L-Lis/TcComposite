@@ -12,7 +12,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[//Work in progress]]></ST>
     </Implementation>
     <Method Name="Refresh" Id="{59ff9bdd-5160-476b-9f55-fd8b157a0818}">
       <Declaration><![CDATA[METHOD Refresh

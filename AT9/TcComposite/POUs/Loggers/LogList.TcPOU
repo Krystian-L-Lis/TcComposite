@@ -9,7 +9,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[//Singleton containing logs]]></ST>
     </Implementation>
     <Method Name="AddLog" Id="{a2bba713-bb31-4ca0-92f4-c9d4114b1314}">
       <Declaration><![CDATA[METHOD AddLog

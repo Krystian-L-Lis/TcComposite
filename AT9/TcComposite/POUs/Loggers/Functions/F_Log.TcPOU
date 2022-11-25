@@ -20,7 +20,10 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF obj_1 <> 0 THEN
+      <ST><![CDATA[//This function creates logs regarding any system related events such as
+//Add/Remove Child/Parent etc.
+
+IF obj_1 <> 0 THEN
 	_obj_1_name := obj_1.name;
 END_IF
 IF obj_2 <> 0 THEN
@@ -40,6 +43,9 @@ LogList.AddLog(_temp_string);
 ]]></ST>
     </Implementation>
     <LineIds Name="F_Log">
+      <LineId Id="127" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="129" Count="0" />
       <LineId Id="97" Count="0" />
       <LineId Id="102" Count="3" />
       <LineId Id="98" Count="0" />

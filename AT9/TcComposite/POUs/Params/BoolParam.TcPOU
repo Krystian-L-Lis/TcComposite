@@ -21,7 +21,11 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[value := F_ToUCase(value);
+        <ST><![CDATA[//Change value to TRUE or FALSE. By default Twincat accept only 'FALSE' as actual FALSE
+//This methods extends number of strings that are considered as FALSE.
+
+
+value := F_ToUCase(value);
 
 IF value = '' OR value = '0' OR value = 'F' OR value = 'FALSE' OR value = 'OFF' THEN
 	value := 'FALSE';
@@ -59,6 +63,9 @@ END_IF]]></ST>
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="BoolParam.Change_Param">
+      <LineId Id="58" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="59" Count="1" />
       <LineId Id="45" Count="1" />
       <LineId Id="38" Count="1" />
       <LineId Id="42" Count="2" />

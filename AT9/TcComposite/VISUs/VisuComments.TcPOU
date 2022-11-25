@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="VisuComments" Id="{0a4cbecb-741e-436a-bb74-3baa223f060d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM VisuComments
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(*
+//Visu consist of 2 frames:
+	- Object browser	- used for browsing the object tree. It is possible to access every
+						object through it. Side buttons are used to move between syblings.
+						Buttons above and below current object name help to move between generations.
+						Enter the name of the object on the middle and clikc 'Search' to find any object.
+						
+						- 'Change param' opens dialog that can be used to modify internal value of any object
+						implementing I_Param interface. Use 'Copy Param from browser' each time the value or active object changed.
+	
+	- Logs				- contain all events, such as add or remove child, attach sub/pub, update sub, etc.
+
+
+*)]]></ST>
+    </Implementation>
+    <LineIds Name="VisuComments">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

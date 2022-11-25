@@ -2,7 +2,8 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <Itf Name="I_Object" Id="{dffd8043-1b94-4cb9-b060-56beea9b220f}">
     <Declaration><![CDATA[INTERFACE I_Object EXTENDS I_Label
-]]></Declaration>
+
+//I_SYS_COMP_Object facade]]></Declaration>
     <Method Name="Get_Child" Id="{3c03574c-637e-4c51-9cc2-b0efc8c98d52}">
       <Declaration><![CDATA[METHOD Get_Child : I_Object
 VAR_INPUT

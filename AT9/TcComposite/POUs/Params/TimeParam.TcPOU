@@ -24,7 +24,11 @@ VAR
 	_value_ms: DWORD;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[value := F_ToLCase(value);
+        <ST><![CDATA[//This method changes the TIME value. It accepts more TIME formats than standard T#12s.
+//Accepted formats include:
+// - 12s, 12S, 12 s, 12 S, T#12S, T#12s, T#0m12S, 12000, etc
+
+value := F_ToLCase(value);
 
 WHILE FIND(value, ' ') <> 0 DO
 	value := DELETE(value, 1, FIND(value, ' '));
@@ -61,6 +65,9 @@ _display := DELETE(_display, 2, 1);]]></ST>
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="TimeParam.Change_Param">
+      <LineId Id="206" Count="0" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="207" Count="0" />
       <LineId Id="174" Count="1" />
       <LineId Id="132" Count="0" />
       <LineId Id="179" Count="1" />

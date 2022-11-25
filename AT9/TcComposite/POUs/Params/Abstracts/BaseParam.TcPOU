@@ -4,11 +4,17 @@
     <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT BaseParam EXTENDS Object IMPLEMENTS I_Param
 VAR
 	_display: STRING := '0';
-	//logger
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[//Base Param object.
+// _display should be used to extract data from the interface in string form. 
+// For example to use with visu.
+
+//Q variable should be used to access the data directly from FB.
+//Each derivative of this funciton should have added Q variable of literal type.
+
+//Each derivative of BaseParam has Quick_Change(value) to directly modify Q value.]]></ST>
     </Implementation>
     <Method Name="Change_Param" Id="{b2534efa-639f-4351-8c79-0b2100913693}">
       <Declaration><![CDATA[METHOD Change_Param
@@ -17,7 +23,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[//How string value should be translated to other data type]]></ST>
       </Implementation>
     </Method>
     <Property Name="display" Id="{03aaf4e1-7807-4d0f-bfec-738b9c6ff2bb}">
@@ -33,6 +39,10 @@ END_VAR
     </Property>
     <LineIds Name="BaseParam">
       <LineId Id="24" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
     </LineIds>
     <LineIds Name="BaseParam.Change_Param">
       <LineId Id="18" Count="0" />

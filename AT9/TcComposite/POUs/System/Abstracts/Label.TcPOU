@@ -19,7 +19,7 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[//Base class. Allows querry instances by their name.]]></ST>
+      <ST><![CDATA[//Base class. Allows to querry instances by their name.]]></ST>
     </Implementation>
     <Method Name="FB_init" Id="{2fdf334e-2b2d-4639-ba14-26a06891310e}">
       <Declaration><![CDATA[METHOD FB_init : BOOL
@@ -29,7 +29,8 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[_name := DELETE(_sPath, FIND(_sPath, '.'), 1);
+        <ST><![CDATA[//Update name after each 'New Download'
+_name := DELETE(_sPath, FIND(_sPath, '.'), 1);
 _name := DELETE(_name, FIND(_name, '.'), 1);]]></ST>
       </Implementation>
     </Method>
@@ -48,6 +49,7 @@ END_VAR
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="Label.FB_init">
+      <LineId Id="14" Count="0" />
       <LineId Id="8" Count="0" />
       <LineId Id="7" Count="0" />
     </LineIds>

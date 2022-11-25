@@ -2,7 +2,8 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <Itf Name="I_BoolPub" Id="{0c8aefb5-64be-4ef0-bee9-a126844e4796}">
     <Declaration><![CDATA[INTERFACE I_BoolPub EXTENDS I_SYS_COMP_Object
-]]></Declaration>
+
+//Work in progress]]></Declaration>
     <Method Name="Attach_Sub" Id="{69b208be-e7fc-426f-bdc1-fee6bcdf39b6}">
       <Declaration><![CDATA[METHOD Attach_Sub
 VAR_INPUT

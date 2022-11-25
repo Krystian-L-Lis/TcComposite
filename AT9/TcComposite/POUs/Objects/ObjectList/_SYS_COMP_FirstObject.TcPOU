@@ -11,10 +11,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[//First object in global object list.
+//DO NOT DELETE!!!]]></ST>
     </Implementation>
     <LineIds Name="_SYS_COMP_FirstObject">
       <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

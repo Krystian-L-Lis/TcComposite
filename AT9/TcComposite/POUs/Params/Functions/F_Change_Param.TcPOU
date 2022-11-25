@@ -12,7 +12,10 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[_interface_match := __QUERYINTERFACE(IObject, _IParam);
+      <ST><![CDATA[//Used to safely change param of unknown object. If object doesn't contain I_Param
+//or if it is 0 then it won't work.
+
+_interface_match := __QUERYINTERFACE(IObject, _IParam);
 IF _interface_match THEN
 	_IParam.Change_Param(value);
 END_IF
@@ -20,6 +23,9 @@ END_IF
 F_Change_Param := _interface_match;]]></ST>
     </Implementation>
     <LineIds Name="F_Change_Param">
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="30" Count="0" />
       <LineId Id="7" Count="0" />
       <LineId Id="11" Count="2" />
       <LineId Id="19" Count="0" />

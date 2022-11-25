@@ -45,9 +45,6 @@
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Loggers\Functions\CONCAT10.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="POUs\Loggers\Functions\F_Log.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -162,6 +159,9 @@
       <DependentUpon>Visualization Manager.TcVMO</DependentUpon>
       <ExcludeFromBuild>false</ExcludeFromBuild>
       <External>false</External>
+    </Compile>
+    <Compile Include="VISUs\VisuComments.TcPOU">
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="VISU_TASK.TcTTO">
       <SubType>Code</SubType>

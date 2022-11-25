@@ -34,19 +34,17 @@ VAR_INPUT
 	IObject: I_SYS_COMP_Object;
 END_VAR
 VAR
-	_this_object: I_SYS_COMP_Object;
+	_this_object: I_SYS_COMP_Object; //THIS^ can't be used as in IF statement
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF IObject = 0 THEN
-	//LOG
-	//Invalid Object
+        <ST><![CDATA[//Remove from current chain and add to parent chain
+
+IF IObject = 0 THEN
 	RETURN;
 END_IF
 
 _this_object := THIS^;
 IF IObject._SYS_COMP_parent <> 0 AND_THEN IObject._SYS_COMP_parent <> _this_object THEN
-	//LOG
-	//Object from different parent
 	RETURN;
 END_IF
 
@@ -67,7 +65,6 @@ IObject._SYS_COMP_prev_object := _SYS_COMP_last_child_;
 _SYS_COMP_last_child_._SYS_COMP_next_object := IObject;
 
 _SYS_COMP_last_child_ := IObject;
-//LOG
 ]]></ST>
       </Implementation>
     </Method>
@@ -79,18 +76,35 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF _SYS_COMP_prev_object_ = 0 THEN
+        <ST><![CDATA[// At the initialisation all objects are added to 
+// the global list in order parent, child, parent_sibling, parent_sibling_child etc
+
+// At FB_init the object is added to global list and then it's looking for parent
+// It first check if previous sybling is its parent, 
+// and then if its parent of a parent(of a parent ...)
+// if there is no similarity beteen objec and any other object paths,
+// the object is not removed from global list.
+
+// Example child name: A.B.C.D.E
+// Example previous sibling name: G.A.B
+// Example parent name: G.A.B
+//Thus the process looks like that:
+
+IF _SYS_COMP_prev_object_ = 0 THEN
 	RETURN;
 END_IF
 
+//Check if previous sybling has similar path as the object
 IF FIND(_name, _SYS_COMP_prev_object_.name) <> 0 THEN
 	_temp_name := F_Get_Parent_Path(_name);
+	//delete name after last dot and check if it matches previous sybling name
 	IF _SYS_COMP_prev_object_.name = _temp_name THEN
 		_SYS_COMP_prev_object_._SYS_COMP_Add_Child_(THIS^);
 		_SYS_COMP_parent := _SYS_COMP_prev_object_;
 		RETURN;
 	END_IF
 	
+	//proceed deleting dots, if any name match the resulting path then set up the parent
 	WHILE TRUE DO
 		_temp_name := F_Get_Parent_Path(_temp_name);
 		_potential_parent := _SYS_COMP_prev_object._SYS_COMP_Get_Child(_temp_name);
@@ -101,6 +115,7 @@ IF FIND(_name, _SYS_COMP_prev_object_.name) <> 0 THEN
 			RETURN;	
 		END_IF
 		
+		// if nothing left from the object path, then the object is part of global list
 		IF _temp_name = '' THEN
 			RETURN;
 		END_IF
@@ -117,7 +132,11 @@ VAR
 	_IObject: I_SYS_COMP_Object;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF RIGHT(name, 1) <> '#' THEN
+        <ST><![CDATA[//Get system object interface
+
+//Add # at the end. This will ensure that the string value 
+//is actually on the end of the path
+IF RIGHT(name, 1) <> '#' THEN
 	name := CONCAT(name, '#');
 END_IF
 
@@ -125,13 +144,13 @@ IF _SYS_COMP_last_child_ <> 0 THEN
 	_IObject := _SYS_COMP_last_child_._SYS_COMP_Get_Object(_name, name);
 END_IF
 
+//For security reasons this method always returns something,
+//Thus if object can't be found, the methods return the THIS object
 IF _IObject <> 0 THEN
 	_SYS_COMP_Get_Child := _IObject;
 ELSE
 	_SYS_COMP_Get_Child := THIS^;
-END_IF
-
-//LOG]]></ST>
+END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="_SYS_COMP_Get_Object" Id="{989a4565-d876-4971-8668-0b863fcac9dc}">
@@ -144,17 +163,21 @@ VAR
 	_temp_name: STRING;
 	_IObject: I_SYS_COMP_Object;
 	_case: USINT;
-	_this_object: I_SYS_COMP_Object;
+	_this_object: I_SYS_COMP_Object; //THIS^ can't be used as in IF statement
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[_temp_name := CONCAT(_name, '#');
 _this_object := THIS^;
 
 IF parent_name = '#' THEN
-	//ANY_PARENT
+	//FIND object ending with name# in any parent
 	_case := 1;
 END_IF
 
+//Check if object matches the searched name,
+//If no check if it contain searched name,
+//If yes, check in children,
+//If not, go to next sibling
 
 CASE _case OF
 	0:
@@ -169,7 +192,7 @@ CASE _case OF
 				RETURN;
 			END_IF
 		END_IF
-	1:	//ANY PARENT
+	1:	//FIND object ending with name# in any parent
 		IF FIND(_temp_name, name) <> 0 THEN
 			_SYS_COMP_Get_Object := THIS^;
 			RETURN;	
@@ -182,6 +205,8 @@ CASE _case OF
 		END_IF
 END_CASE
 
+
+//Got to next sibling
 IF _SYS_COMP_prev_object_ <> 0 THEN
 	_SYS_COMP_Get_Object := _SYS_COMP_prev_object_._SYS_COMP_Get_Object(parent_name, name);
 	RETURN;
@@ -367,7 +392,9 @@ VAR
 	ISYSChild: I_SYS_COMP_Object;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[ISYSChild := _SYS_COMP_Get_Child(name);
+        <ST><![CDATA[//Get child facade interface(without all system methods)
+
+ISYSChild := _SYS_COMP_Get_Child(name);
 
 IF __QUERYINTERFACE(ISYSChild, IChild) THEN
 	Get_Child := IChild;
@@ -382,7 +409,9 @@ VAR
 	IParent : I_Object;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF __QUERYINTERFACE(_SYS_COMP_parent_, IParent) THEN
+        <ST><![CDATA[//Get parent facade interface(without all system methods)
+
+IF __QUERYINTERFACE(_SYS_COMP_parent_, IParent) THEN
 	Get_Parent := IParent;
 ELSE
 	Get_Parent := THIS^;
@@ -395,22 +424,19 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[//User code. Called by children]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="Object">
       <LineId Id="9" Count="0" />
     </LineIds>
     <LineIds Name="Object._SYS_COMP_Add_Child_">
+      <LineId Id="142" Count="1" />
       <LineId Id="4" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="78" Count="0" />
       <LineId Id="7" Count="1" />
       <LineId Id="66" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="58" Count="0" />
-      <LineId Id="60" Count="0" />
-      <LineId Id="72" Count="0" />
       <LineId Id="62" Count="0" />
       <LineId Id="61" Count="0" />
       <LineId Id="130" Count="0" />
@@ -427,19 +453,31 @@ END_VAR
       <LineId Id="92" Count="0" />
       <LineId Id="99" Count="2" />
       <LineId Id="98" Count="0" />
-      <LineId Id="97" Count="0" />
       <LineId Id="102" Count="0" />
     </LineIds>
     <LineIds Name="Object._SYS_COMP_Find_Parent_">
+      <LineId Id="109" Count="1" />
+      <LineId Id="112" Count="1" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="117" Count="1" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="103" Count="0" />
       <LineId Id="7" Count="2" />
-      <LineId Id="23" Count="1" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="24" Count="0" />
       <LineId Id="62" Count="0" />
+      <LineId Id="121" Count="0" />
       <LineId Id="56" Count="0" />
       <LineId Id="95" Count="0" />
       <LineId Id="57" Count="0" />
       <LineId Id="59" Count="0" />
       <LineId Id="54" Count="0" />
       <LineId Id="91" Count="0" />
+      <LineId Id="122" Count="0" />
       <LineId Id="27" Count="0" />
       <LineId Id="63" Count="0" />
       <LineId Id="65" Count="0" />
@@ -449,13 +487,22 @@ END_VAR
       <LineId Id="78" Count="0" />
       <LineId Id="89" Count="0" />
       <LineId Id="79" Count="0" />
-      <LineId Id="84" Count="3" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="85" Count="2" />
       <LineId Id="42" Count="0" />
       <LineId Id="29" Count="0" />
     </LineIds>
     <LineIds Name="Object._SYS_COMP_Get_Child">
-      <LineId Id="52" Count="13" />
-      <LineId Id="20" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="52" Count="6" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="60" Count="4" />
     </LineIds>
     <LineIds Name="Object._SYS_COMP_Get_Object">
       <LineId Id="72" Count="0" />
@@ -465,7 +512,9 @@ END_VAR
       <LineId Id="232" Count="0" />
       <LineId Id="230" Count="0" />
       <LineId Id="228" Count="0" />
+      <LineId Id="280" Count="0" />
       <LineId Id="224" Count="0" />
+      <LineId Id="281" Count="2" />
       <LineId Id="212" Count="1" />
       <LineId Id="216" Count="0" />
       <LineId Id="220" Count="0" />
@@ -479,6 +528,7 @@ END_VAR
       <LineId Id="236" Count="8" />
       <LineId Id="218" Count="0" />
       <LineId Id="217" Count="0" />
+      <LineId Id="284" Count="1" />
       <LineId Id="186" Count="1" />
       <LineId Id="189" Count="0" />
       <LineId Id="185" Count="0" />
@@ -560,6 +610,7 @@ END_VAR
       <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="Object.Get_Child">
+      <LineId Id="36" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="23" Count="0" />
       <LineId Id="22" Count="0" />
@@ -569,6 +620,7 @@ END_VAR
       <LineId Id="25" Count="0" />
     </LineIds>
     <LineIds Name="Object.Get_Parent">
+      <LineId Id="21" Count="1" />
       <LineId Id="5" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="16" Count="1" />
