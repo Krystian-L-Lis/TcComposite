@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_IObject_TO_IParam" Id="{caf6ad82-ca5a-410e-bdea-2906a70af95b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_IObject_TO_IParam : I_Param
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+	IParam: I_Param;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[__QUERYINTERFACE(IObject, IParam);
+F_IObject_To_IParam := IParam;]]></ST>
+    </Implementation>
+    <LineIds Name="F_IObject_TO_IParam">
+      <LineId Id="10" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

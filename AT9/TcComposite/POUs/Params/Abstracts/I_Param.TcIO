@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <Itf Name="I_Param" Id="{462837ae-6220-4c58-9cab-5a6d0840ba4e}">
+    <Declaration><![CDATA[INTERFACE I_Param EXTENDS I_Label
+]]></Declaration>
+    <Method Name="Change_Param" Id="{acb4b7f1-7466-44c0-93e4-963010297b5b}">
+      <Declaration><![CDATA[METHOD Change_Param
+VAR_INPUT
+	value: STRING;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="display" Id="{8c501508-67f3-41da-9944-405e546074ea}">
+      <Declaration><![CDATA[PROPERTY display : STRING]]></Declaration>
+      <Get Name="Get" Id="{5def2644-76d6-47f7-a717-eb7b0d470d47}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

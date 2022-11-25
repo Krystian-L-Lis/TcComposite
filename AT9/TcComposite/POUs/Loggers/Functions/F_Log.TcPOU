@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_Log" Id="{eab04521-e04a-4faf-9d50-34ba3a804c36}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Log : BOOL
+VAR_INPUT
+	obj_1	: I_SYS_COMP_Object;
+	act_1	: STRING(30);
+	obj_2	: I_SYS_COMP_Object;
+	act_2	: STRING(30);
+	obj_3	: I_SYS_COMP_Object;
+END_VAR
+VAR
+	_remaining_spaces: INT;
+	_temp_string: T_MAXSTRING := '                                                                                                                                                                                                                                                               ';
+	
+	_obj_1_name	: STRING(65);
+	_obj_2_name	: STRING(65);
+	_obj_3_name	: STRING(65);
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF obj_1 <> 0 THEN
+	_obj_1_name := obj_1.name;
+END_IF
+IF obj_2 <> 0 THEN
+	_obj_2_name := obj_2.name;
+END_IF
+IF obj_3 <> 0 THEN
+	_obj_3_name := obj_3.name;
+END_IF
+
+_temp_string := INSERT(_temp_string, _obj_1_name, 0);
+_temp_string := INSERT(_temp_string, act_1, 64);
+_temp_string := INSERT(_temp_string, _obj_2_name, 94);
+_temp_string := INSERT(_temp_string, act_2, 159);
+_temp_string := INSERT(_temp_string, _obj_3_name, 189);
+
+LogList.AddLog(_temp_string);
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_Log">
+      <LineId Id="97" Count="0" />
+      <LineId Id="102" Count="3" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="107" Count="1" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="66" Count="3" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

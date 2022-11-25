@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="BoolPub" Id="{a9a66cfb-679c-4177-804d-f1017675d0b2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK BoolPub EXTENDS Object IMPLEMENTS I_BoolSub
+VAR_INPUT
+	IN: BOOL;
+END_VAR
+VAR
+	_sub: I_BoolSub;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Attach_Sub" Id="{b77e8169-6f7d-4619-a088-a9d809e4fcc2}">
+      <Declaration><![CDATA[METHOD Attach_Sub
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+VAR
+	_ISub: I_BoolSub;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF __QUERYINTERFACE(IObject, _ISub) THEN
+	_sub := _ISub;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Get" Id="{fc7afd35-76d3-4822-a75b-49ce5b51e532}">
+      <Declaration><![CDATA[PROPERTY Get : I_SYS_COMP_Object]]></Declaration>
+      <Get Name="Get" Id="{074db2a4-4981-4300-9123-fa45daf3dd83}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IN := Get;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Remove_Sub" Id="{a69b7383-0a35-431f-a75f-7ddf957bd782}">
+      <Declaration><![CDATA[METHOD Remove_Sub
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+VAR
+	_ISub: I_BoolSub;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF __QUERYINTERFACE(IObject, _ISub) THEN
+	_sub := _ISub;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="BoolPub">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="BoolPub.Attach_Sub">
+      <LineId Id="6" Count="0" />
+      <LineId Id="14" Count="1" />
+    </LineIds>
+    <LineIds Name="BoolPub.Get.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="BoolPub.Remove_Sub">
+      <LineId Id="9" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

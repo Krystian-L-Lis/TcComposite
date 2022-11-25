@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PID" Id="{48172188-bde8-4bba-b163-b7538b6cd70e}">
+    <Declaration><![CDATA[TYPE ST_PID :
+STRUCT
+	p: RealParam;
+	i: RealParam;
+	d: RealParam;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

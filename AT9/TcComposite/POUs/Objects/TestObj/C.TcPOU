@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="C" Id="{f8441e50-1156-4952-a945-ea26c32b87ec}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK C EXTENDS Object
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	tU: UdintParam;
+	tT: TimeParam;
+	tR: RealParam;
+	tD: DintParam;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

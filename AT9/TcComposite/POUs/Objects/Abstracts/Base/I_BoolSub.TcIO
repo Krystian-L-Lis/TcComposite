@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <Itf Name="I_BoolSub" Id="{46df10c2-b652-4e2c-a295-535db8b5169f}">
+    <Declaration><![CDATA[INTERFACE I_BoolSub EXTENDS I_SYS_COMP_Object
+]]></Declaration>
+    <Method Name="Attach_Pub" Id="{bf8a3ea3-809f-497d-9b9d-3ba408b1ec5f}">
+      <Declaration><![CDATA[METHOD Attach_Pub
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Remove_Pub" Id="{9a219e3b-07da-4805-b783-18f230e2ad0b}">
+      <Declaration><![CDATA[METHOD Remove_Pub
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Set" Id="{e0cd908b-2546-4fda-ab54-c8c7e890a2e2}">
+      <Declaration><![CDATA[PROPERTY Set : BOOL]]></Declaration>
+      <Set Name="Set" Id="{05568618-8848-4f22-84fe-5f7fa5222578}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

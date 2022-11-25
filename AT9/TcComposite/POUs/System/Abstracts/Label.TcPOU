@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Label" Id="{1ca27162-a753-4627-9fe0-11386270227f}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'reflection'}
+FUNCTION_BLOCK ABSTRACT Label IMPLEMENTS I_Label
+VAR CONSTANT
+END_VAR
+VAR_INPUT
+END_VAR
+VAR
+	
+	{attribute 'instance-path'} 
+    {attribute 'noinit'}
+	_sPath: T_MaxString;
+	{attribute 'no_copy'}
+	_name: T_MaxString;
+	
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Base class. Allows querry instances by their name.]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{2fdf334e-2b2d-4639-ba14-26a06891310e}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_name := DELETE(_sPath, FIND(_sPath, '.'), 1);
+_name := DELETE(_name, FIND(_name, '.'), 1);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="name" Id="{51ac3072-3c91-47be-8c6f-4ddd0aa84d6c}">
+      <Declaration><![CDATA[PROPERTY name : STRING]]></Declaration>
+      <Get Name="Get" Id="{434a7f2a-0410-41bd-a9ea-abda52936d77}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[name := _name;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="Label">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Label.FB_init">
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Label.name.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

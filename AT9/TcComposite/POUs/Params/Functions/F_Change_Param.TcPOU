@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_Change_Param" Id="{1b59bbb4-5d51-4efd-9d96-47d8a2742135}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Change_Param : BOOL
+VAR_INPUT
+	IObject: I_Object;
+	value: STRING;
+END_VAR
+VAR
+	_IParam: I_Param;
+	_interface_match: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[_interface_match := __QUERYINTERFACE(IObject, _IParam);
+IF _interface_match THEN
+	_IParam.Change_Param(value);
+END_IF
+
+F_Change_Param := _interface_match;]]></ST>
+    </Implementation>
+    <LineIds Name="F_Change_Param">
+      <LineId Id="7" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

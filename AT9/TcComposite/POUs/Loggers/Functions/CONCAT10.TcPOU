@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="CONCAT10" Id="{cfb01ea0-588e-48d3-8df0-8e3e837cbe4c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION CONCAT10 : T_MAXSTRING
+VAR_INPUT
+	string01: STRING;
+	string02: STRING;
+	string03: STRING;
+	string04: STRING;
+	string05: STRING;
+	string06: STRING;
+	string07: STRING;
+	string08: STRING;
+	string09: STRING;
+	string10: STRING;
+END_VAR
+VAR
+	stringSum: T_MAXSTRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[stringSum := CONCAT(stringSum, string01);
+stringSum := CONCAT(stringSum, string02);
+stringSum := CONCAT(stringSum, string03);
+stringSum := CONCAT(stringSum, string04);
+stringSum := CONCAT(stringSum, string05);
+stringSum := CONCAT(stringSum, string06);
+stringSum := CONCAT(stringSum, string07);
+stringSum := CONCAT(stringSum, string08);
+stringSum := CONCAT(stringSum, string09);
+stringSum := CONCAT(stringSum, string10);
+CONCAT10 := stringSum;]]></ST>
+    </Implementation>
+    <LineIds Name="CONCAT10">
+      <LineId Id="7" Count="0" />
+      <LineId Id="20" Count="8" />
+      <LineId Id="30" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

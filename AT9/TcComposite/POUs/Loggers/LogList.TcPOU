@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="LogList" Id="{c0015b5c-322e-41bb-a97b-a27bbf0ed492}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'global_init_slot' := '40001'}
+PROGRAM LogList
+VAR
+	list: ARRAY[1..4000] OF T_MAXSTRING;
+	lastlog: UINT := 1;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddLog" Id="{a2bba713-bb31-4ca0-92f4-c9d4114b1314}">
+      <Declaration><![CDATA[METHOD AddLog
+VAR_INPUT
+	text: T_MAXSTRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[list[lastLog] := text;
+lastLog := lastLog + 1;
+
+IF lastLog = 4001 THEN
+	lastLog := 1;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Print_To_ADS" Id="{a8558cc6-5608-4256-b97b-96a99ae27a78}">
+      <Declaration><![CDATA[METHOD Print_To_ADS : DINT
+VAR
+	_counter : UINT := 1;
+	_temp_string: T_MAXSTRING;
+	_print_string: T_MAXSTRING;
+	_error : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR _counter := 1 TO lastlog DO
+	_temp_string := UINT_TO_ZEROSTRING(_counter);
+	_temp_string := CONCAT(_temp_string, '  ');
+	_temp_string := CONCAT(_temp_string, list[_counter]);
+	_print_string := _temp_string;
+	
+	_error := ADSLOGSTR(ADSLOG_MSGTYPE_STRING, _print_string, '');
+	
+	IF _error <> 0 THEN
+		Print_To_ADS := _error;
+		RETURN;
+	END_IF
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="LogList">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="LogList.AddLog">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="1" />
+    </LineIds>
+    <LineIds Name="LogList.Print_To_ADS">
+      <LineId Id="13" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

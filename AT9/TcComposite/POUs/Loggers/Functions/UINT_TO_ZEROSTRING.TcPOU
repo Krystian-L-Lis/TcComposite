@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="UINT_TO_ZEROSTRING" Id="{014cd159-375b-4b71-a396-27af5aaf6299}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION UINT_TO_ZEROSTRING : T_MAXSTRING
+VAR_INPUT
+	input : UDINT;
+END_VAR
+VAR
+	tempString : T_MAXSTRING;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tempString := TO_STRING(input);
+WHILE LEN(tempString) < 4 DO
+	tempString := INSERT(tempString, '0', 0);
+END_WHILE
+UINT_TO_ZEROSTRING := tempString;]]></ST>
+    </Implementation>
+    <LineIds Name="UINT_TO_ZEROSTRING">
+      <LineId Id="7" Count="0" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="36" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

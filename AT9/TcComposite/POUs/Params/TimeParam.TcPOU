@@ -1,0 +1,88 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="TimeParam" Id="{e42b2b62-7024-4947-950d-1bbb2145cbdf}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK FINAL TimeParam EXTENDS BaseParam
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	value: TIME;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Change_Param" Id="{b8a78d61-360c-4d46-83bb-bf1dc6cf7dbe}">
+      <Declaration><![CDATA[METHOD Change_Param
+VAR_INPUT
+	value	: STRING;
+END_VAR
+VAR
+	_last_char: STRING;
+	_value_ms: DWORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[value := F_ToLCase(value);
+
+WHILE FIND(value, ' ') <> 0 DO
+	value := DELETE(value, 1, FIND(value, ' '));
+END_WHILE
+
+_last_char := RIGHT(value, 1);
+IF _last_char <> 's' AND _last_char <> 'm' AND _last_char <> 'h' AND _last_char <> 'd' THEN
+	_value_ms := STRING_TO_DWORD(value);
+	value := DWORD_TO_STRING(_value_ms);
+	value := concat(value, 'ms');
+END_IF
+
+value := DELETE(value, 1, FIND(value, 't#'));
+value := CONCAT('T#', value);
+
+THIS^.value := STRING_TO_TIME(value);
+_display := TIME_TO_STRING(THIS^.value);
+_display := DELETE(_display, 2, 1);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Quick_Change" Id="{4e207cf7-d870-4cd3-86ab-7e71fa397efc}">
+      <Declaration><![CDATA[METHOD Quick_Change
+VAR_INPUT
+	value: TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.value := value;
+_display := TIME_TO_STRING(THIS^.value);
+_display := DELETE(_display, 2, 1);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="TimeParam">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="TimeParam.Change_Param">
+      <LineId Id="174" Count="1" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="179" Count="1" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="191" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="183" Count="0" />
+    </LineIds>
+    <LineIds Name="TimeParam.Quick_Change">
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Timer" Id="{2a10577a-9a74-486a-885d-a513874d05e1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Timer EXTENDS Object
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	_in: I_BoolSub;
+	_q: I_BoolPub;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Refresh" Id="{59ff9bdd-5160-476b-9f55-fd8b157a0818}">
+      <Declaration><![CDATA[METHOD Refresh
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Timer">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Timer.Refresh">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

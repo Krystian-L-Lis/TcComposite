@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <Itf Name="I_SYS_COMP_Object" Id="{bdc50733-b447-422f-ad91-64ed9a35a495}">
+    <Declaration><![CDATA[INTERFACE I_SYS_COMP_Object EXTENDS I_Label
+]]></Declaration>
+    <Method Name="_SYS_COMP_Add_Child_" Id="{c20012f3-79ec-49bd-85a7-158df27eb97e}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Add_Child_
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR]]></Declaration>
+    </Method>
+    <Method Name="_SYS_COMP_Get_Child" Id="{996576fe-57ee-49d1-baba-9ee31985d1fd}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Get_Child : I_SYS_COMP_Object
+VAR_INPUT
+	name: STRING;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="_SYS_COMP_Get_Object" Id="{a1aa01b2-b45f-47d1-b4c0-e152ada6658a}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Get_Object : I_SYS_COMP_Object
+VAR_INPUT
+	parent_name: STRING;
+	name: STRING;
+END_VAR]]></Declaration>
+    </Method>
+    <Property Name="_SYS_COMP_last_child" Id="{e6b910bc-db2f-4ab1-b3ce-8e7363624639}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_last_child : I_SYS_COMP_Object]]></Declaration>
+      <Get Name="Get" Id="{e5993d7d-4b75-4301-ac68-5e41d71823a6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="_SYS_COMP_next_object" Id="{26c2acad-a053-4481-9dce-9a86433a21fe}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_next_object : I_SYS_COMP_Object]]></Declaration>
+      <Get Name="Get" Id="{6f345dc7-5d5d-4ea2-90d2-c520847065a1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{74e2f287-bee1-46b9-9d70-943b0c9d8f71}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="_SYS_COMP_parent" Id="{1065ed4b-3366-4fe0-957c-02a2df8a92d6}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_parent : I_SYS_COMP_Object]]></Declaration>
+      <Get Name="Get" Id="{570bd12e-2679-4f58-b304-145bdcf6438f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{a67b962d-d371-4967-a04d-46ac7303dec4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="_SYS_COMP_prev_object" Id="{8a505898-68de-4056-bf01-2ccda498a334}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_prev_object : I_SYS_COMP_Object]]></Declaration>
+      <Get Name="Get" Id="{0b535187-e70e-4405-bb06-411b0781ba37}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{2f795ad7-c31e-4b0c-842e-0790b0d91a6f}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="_SYS_COMP_Remove_Child_" Id="{d562cf5e-bd39-4ef5-a321-801bc6f76134}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Remove_Child_
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

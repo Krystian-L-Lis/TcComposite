@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="BoolSub" Id="{9a0adf1b-c06f-431b-bf2e-59f510babc3c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK BoolSub EXTENDS Object IMPLEMENTS I_BoolSub
+VAR_OUTPUT
+	Q: BOOL;
+END_VAR
+VAR
+	_pub: I_BoolPub;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Attach_Pub" Id="{2b2b3796-f7a6-4f30-bc29-b9185adf24d2}">
+      <Declaration><![CDATA[METHOD Attach_Pub
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+VAR
+	_pub: I_BoolPub;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Remove_Pub" Id="{0e1de50b-acb7-4f7a-9249-575bc9972f3e}">
+      <Declaration><![CDATA[METHOD Remove_Pub
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+VAR
+	_pub: I_BoolPub;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Set" Id="{026c3244-79fa-4084-910f-e764ee859730}">
+      <Declaration><![CDATA[PROPERTY Set : I_SYS_COMP_Object]]></Declaration>
+      <Set Name="Set" Id="{27b434e4-14dc-4193-a92a-29fa9744b8db}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Q := Set;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <LineIds Name="BoolSub">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="BoolSub.Attach_Pub">
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="BoolSub.Remove_Pub">
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="BoolSub.Set.Set">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

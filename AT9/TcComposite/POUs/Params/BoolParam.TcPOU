@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="BoolParam" Id="{2f01e2ae-9aef-46ce-80e0-d563f1f2ad2f}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK FINAL BoolParam EXTENDS BaseParam
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	value: BOOL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Change_Param" Id="{6e546fb4-4bcb-4897-9100-4ed85b8764c8}">
+      <Declaration><![CDATA[METHOD Change_Param
+VAR_INPUT
+	value	: STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[value := F_ToUCase(value);
+
+IF value = '' OR value = '0' OR value = 'F' OR value = 'FALSE' OR value = 'OFF' THEN
+	value := 'FALSE';
+ELSE
+	value := 'TRUE';
+END_IF
+
+THIS^.value := STRING_TO_BOOL(value);
+
+IF THIS^.value THEN
+	_display := 'ON';
+ELSE
+	_display := 'OFF';
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Quick_Change" Id="{70185834-c71d-41c5-8e7a-1ad746e118f3}">
+      <Declaration><![CDATA[METHOD Quick_Change
+VAR_INPUT
+	value: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.value := value;
+
+IF THIS^.value THEN
+	_display := 'ON';
+ELSE
+	_display := 'OFF';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="BoolParam">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="BoolParam.Change_Param">
+      <LineId Id="45" Count="1" />
+      <LineId Id="38" Count="1" />
+      <LineId Id="42" Count="2" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="28" Count="0" />
+    </LineIds>
+    <LineIds Name="BoolParam.Quick_Change">
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="4" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

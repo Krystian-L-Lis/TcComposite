@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="F_Get_Parent_Path" Id="{58bf5ad2-8079-4d52-aa81-2c75d9f51c07}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Get_Parent_Path : T_MAXSTRING
+VAR_INPUT
+	child_path: T_MAXSTRING;
+END_VAR
+VAR
+	_output_string: T_MAXSTRING;
+	_dot_position: INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WHILE TRUE DO
+	_dot_position := FIND(child_path, '.');	
+	
+	IF _dot_position = 0 THEN
+		_output_string := DELETE(_output_string, 1, LEN(_output_string));
+		F_Get_Parent_Path := _output_string;
+		RETURN;
+	END_IF
+	
+	_output_string := CONCAT(_output_string, LEFT(child_path, _dot_position));
+		
+	child_path := DELETE(child_path, _dot_position, 1);
+	
+
+END_WHILE
+]]></ST>
+    </Implementation>
+    <LineIds Name="F_Get_Parent_Path">
+      <LineId Id="31" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

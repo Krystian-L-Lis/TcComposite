@@ -1,0 +1,201 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="_SYS_COMP_" Id="{eec00dc6-a6da-4d51-a38a-ad770690abfb}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'global_init_slot' := '40002'}
+{attribute 'hide_all_locals'}
+PROGRAM _SYS_COMP_
+VAR
+	_last_in_chain: I_SYS_COMP_Object;
+	_object_list: _SYS_COMP_FirstObject;
+END_VAR
+VAR CONSTANT
+	_name : STRING := 'ObjectList';
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Add_Object" Id="{6145b810-06b8-41de-b7a7-9e20030068bb}">
+      <Declaration><![CDATA[METHOD Add_Object
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IObject = 0 THEN
+	//LOG
+	RETURN;
+END_IF
+
+Remove_Object(IObject);
+
+F_Log(IObject, 'ADDED TO', _object_list, '', 0);
+
+IF _last_in_chain = 0 THEN
+	_last_in_chain := IObject;
+	RETURN;
+END_IF
+
+_last_in_chain._SYS_COMP_next_object := IObject;
+IObject._SYS_COMP_prev_object := _last_in_chain;
+_last_in_chain := IObject;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Get_Object" Id="{3a7dc190-07ed-48eb-b201-cb6031cd8362}">
+      <Declaration><![CDATA[METHOD Get_Object : I_SYS_COMP_Object
+VAR_INPUT
+	name: STRING;
+END_VAR
+VAR
+	_IObject	:	I_SYS_COMP_Object;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[name := CONCAT(name, '#');
+IF _last_in_chain <> 0 THEN
+	_IObject := _last_in_chain._SYS_COMP_Get_Object('#', name);
+END_IF
+
+IF _IObject <> 0 THEN
+	Get_Object := _IObject;
+ELSE
+	Get_Object := _object_list;
+END_IF
+
+//LOG]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="object_list" Id="{56db4b6d-b4a9-44d1-a6d1-07c92b56f02a}">
+      <Declaration><![CDATA[PROPERTY object_list : I_SYS_COMP_Object]]></Declaration>
+      <Get Name="Get" Id="{f002fe86-c5aa-4768-96fe-ad5e64e2222f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[object_list := _object_list;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Remove_Object" Id="{1199ec0b-f579-40dc-b803-62ccc2cf4a89}">
+      <Declaration><![CDATA[METHOD Remove_Object
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IObject = 0 THEN
+	RETURN;
+END_IF
+
+IF IObject._SYS_COMP_prev_object = 0 AND IObject._SYS_COMP_next_object = 0 THEN
+	RETURN;
+END_IF
+
+IF IObject._SYS_COMP_parent <> 0 THEN
+	F_Log(IObject, 'IS NOT CHILD OF', _object_list, '', 0);
+	RETURN;
+END_IF
+
+F_Log(IObject, 'REMOVED FROM', _object_list, '', 0);
+
+IF IObject._SYS_COMP_next_object <> 0 AND IObject._SYS_COMP_prev_object <> 0 THEN
+	IObject._SYS_COMP_next_object._SYS_COMP_prev_object := IObject._SYS_COMP_prev_object;
+	IObject._SYS_COMP_prev_object._SYS_COMP_next_object := IObject._SYS_COMP_next_object;
+	
+	IObject._SYS_COMP_next_object := 0;
+	IObject._SYS_COMP_prev_object := 0;
+	
+	
+	RETURN;
+END_IF
+
+IF IObject._SYS_COMP_next_object = 0 AND IObject._SYS_COMP_prev_object <> 0 THEN
+	IObject._SYS_COMP_prev_object._SYS_COMP_next_object := 0;
+	_last_in_chain := IObject._SYS_COMP_prev_object;
+	
+	IObject._SYS_COMP_next_object := 0;
+	IObject._SYS_COMP_prev_object := 0;
+
+	RETURN;
+END_IF
+
+IF IObject._SYS_COMP_next_object <> 0 AND IObject._SYS_COMP_prev_object = 0 THEN
+	IObject._SYS_COMP_next_object._SYS_COMP_prev_object := 0;
+	
+	IObject._SYS_COMP_next_object := 0;
+	IObject._SYS_COMP_prev_object := 0;
+	
+	RETURN;
+END_IF
+
+//LOG]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="_SYS_COMP_">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="_SYS_COMP_.Add_Object">
+      <LineId Id="22" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="_SYS_COMP_.Get_Object">
+      <LineId Id="44" Count="6" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="52" Count="1" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="_SYS_COMP_.object_list.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="_SYS_COMP_.Remove_Object">
+      <LineId Id="107" Count="0" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="197" Count="1" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="194" Count="0" />
+      <LineId Id="193" Count="0" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="154" Count="2" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="162" Count="1" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="164" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="167" Count="2" />
+      <LineId Id="171" Count="3" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="165" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="125" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

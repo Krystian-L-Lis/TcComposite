@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="UdintParam" Id="{80291050-3272-447c-b16b-f08de1cfb793}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+FUNCTION_BLOCK FINAL UdintParam EXTENDS BaseParam
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+	value: UDINT;
+END_VAR
+VAR
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Change_Param" Id="{89a37ef8-e48d-4dde-833c-819f59ec7a37}">
+      <Declaration><![CDATA[METHOD Change_Param
+VAR_INPUT
+	value	: STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.value := STRING_TO_UDINT(value);
+_display := UDINT_TO_STRING(THIS^.value);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Quick_Change" Id="{e66f1341-5b5c-4f83-b81c-234669d2057c}">
+      <Declaration><![CDATA[METHOD Quick_Change
+VAR_INPUT
+	value: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.value := value;
+_display := UDINT_TO_STRING(THIS^.value);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="UdintParam">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="UdintParam.Change_Param">
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+    </LineIds>
+    <LineIds Name="UdintParam.Quick_Change">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

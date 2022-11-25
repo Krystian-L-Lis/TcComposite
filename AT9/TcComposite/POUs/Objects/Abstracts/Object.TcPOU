@@ -1,0 +1,581 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Object" Id="{eae3f60c-edc7-4998-9538-a94122880021}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT Object EXTENDS Label IMPLEMENTS I_SYS_COMP_Object, I_Object
+VAR
+	{attribute 'no_copy'}
+	{attribute 'no_init'}
+	_SYS_COMP_next_object_: I_SYS_COMP_Object;
+	
+	{attribute 'no_copy'}
+	{attribute 'no_init'}
+	_SYS_COMP_prev_object_: I_SYS_COMP_Object;
+	
+	{attribute 'no_copy'}
+	{attribute 'no_init'}
+	_SYS_COMP_last_child_: I_SYS_COMP_Object;
+	
+	{attribute 'no_copy'}
+	{attribute 'no_init'}
+	_SYS_COMP_parent_: I_SYS_COMP_Object;
+	
+	{attribute 'no_copy'}
+	{attribute 'no_init'}
+	_SYS_COMP_init_parent_: BOOL;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="_SYS_COMP_Add_Child_" Id="{f2549601-2026-470a-a841-43be88d55427}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Add_Child_
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+VAR
+	_this_object: I_SYS_COMP_Object;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IObject = 0 THEN
+	//LOG
+	//Invalid Object
+	RETURN;
+END_IF
+
+_this_object := THIS^;
+IF IObject._SYS_COMP_parent <> 0 AND_THEN IObject._SYS_COMP_parent <> _this_object THEN
+	//LOG
+	//Object from different parent
+	RETURN;
+END_IF
+
+_SYS_COMP_.Remove_Object(IObject);
+
+F_Log(IObject, 'ADDED TO', THIS^, '', 0);
+
+IObject._SYS_COMP_parent := THIS^;
+
+IF _SYS_COMP_last_child_ = 0 THEN
+	_SYS_COMP_last_child_ := IObject;
+	//LOG
+	RETURN;	
+END_IF
+
+
+IObject._SYS_COMP_prev_object := _SYS_COMP_last_child_;
+_SYS_COMP_last_child_._SYS_COMP_next_object := IObject;
+
+_SYS_COMP_last_child_ := IObject;
+//LOG
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SYS_COMP_Find_Parent_" Id="{59048043-57d2-4b69-a4e3-e4958889a5c1}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Find_Parent_
+VAR
+	_temp_name: STRING;
+	_potential_parent: I_SYS_COMP_Object;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _SYS_COMP_prev_object_ = 0 THEN
+	RETURN;
+END_IF
+
+IF FIND(_name, _SYS_COMP_prev_object_.name) <> 0 THEN
+	_temp_name := F_Get_Parent_Path(_name);
+	IF _SYS_COMP_prev_object_.name = _temp_name THEN
+		_SYS_COMP_prev_object_._SYS_COMP_Add_Child_(THIS^);
+		_SYS_COMP_parent := _SYS_COMP_prev_object_;
+		RETURN;
+	END_IF
+	
+	WHILE TRUE DO
+		_temp_name := F_Get_Parent_Path(_temp_name);
+		_potential_parent := _SYS_COMP_prev_object._SYS_COMP_Get_Child(_temp_name);
+
+		IF _potential_parent <> _SYS_COMP_prev_object THEN
+			_potential_parent._SYS_COMP_Add_Child_(THIS^);
+			_SYS_COMP_parent := _potential_parent;
+			RETURN;	
+		END_IF
+		
+		IF _temp_name = '' THEN
+			RETURN;
+		END_IF
+	END_WHILE
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SYS_COMP_Get_Child" Id="{ec4403bc-2e3f-43ae-8c96-4338612a4c36}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Get_Child : I_SYS_COMP_Object
+VAR_INPUT
+	name: STRING;
+END_VAR
+VAR
+	_IObject: I_SYS_COMP_Object;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF RIGHT(name, 1) <> '#' THEN
+	name := CONCAT(name, '#');
+END_IF
+
+IF _SYS_COMP_last_child_ <> 0 THEN
+	_IObject := _SYS_COMP_last_child_._SYS_COMP_Get_Object(_name, name);
+END_IF
+
+IF _IObject <> 0 THEN
+	_SYS_COMP_Get_Child := _IObject;
+ELSE
+	_SYS_COMP_Get_Child := THIS^;
+END_IF
+
+//LOG]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_SYS_COMP_Get_Object" Id="{989a4565-d876-4971-8668-0b863fcac9dc}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Get_Object : I_SYS_COMP_Object
+VAR_INPUT
+	parent_name: STRING;
+	name: STRING;
+END_VAR
+VAR
+	_temp_name: STRING;
+	_IObject: I_SYS_COMP_Object;
+	_case: USINT;
+	_this_object: I_SYS_COMP_Object;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_temp_name := CONCAT(_name, '#');
+_this_object := THIS^;
+
+IF parent_name = '#' THEN
+	//ANY_PARENT
+	_case := 1;
+END_IF
+
+
+CASE _case OF
+	0:
+		IF FIND(_temp_name, name) <> 0 THEN
+			_SYS_COMP_Get_Object := THIS^;
+			RETURN;
+		END_IF
+		IF FIND(_temp_name, parent_name) <> 0 THEN
+			_IObject := _SYS_COMP_Get_Child(name);
+			IF _IObject <> _this_object AND _IObject <> 0 THEN
+				_SYS_COMP_Get_Object := _IObject;
+				RETURN;
+			END_IF
+		END_IF
+	1:	//ANY PARENT
+		IF FIND(_temp_name, name) <> 0 THEN
+			_SYS_COMP_Get_Object := THIS^;
+			RETURN;	
+		ELSE
+			_IObject := _SYS_COMP_Get_Child(name);
+			IF _IObject <> _this_object AND _IObject <> 0 THEN
+				_SYS_COMP_Get_Object := _IObject;
+				RETURN;
+			END_IF
+		END_IF
+END_CASE
+
+IF _SYS_COMP_prev_object_ <> 0 THEN
+	_SYS_COMP_Get_Object := _SYS_COMP_prev_object_._SYS_COMP_Get_Object(parent_name, name);
+	RETURN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="_SYS_COMP_last_child" Id="{bc330b28-f3e5-481e-9895-4fe9e6d7ac39}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_last_child : I_SYS_COMP_Object]]></Declaration>
+      <Get Name="Get" Id="{cb7f4876-4283-4434-a288-530f5c07654d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_SYS_COMP_last_child := _SYS_COMP_last_child_;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="_SYS_COMP_next_object" Id="{23568282-6933-43c8-9408-12b9a690f36c}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_next_object : I_SYS_COMP_Object
+]]></Declaration>
+      <Get Name="Get" Id="{4bae78ee-8b31-4eac-8e7a-069a125a3e42}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_SYS_COMP_next_object := _SYS_COMP_next_object_;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{9729f03d-62f0-412a-980e-c0665020c00c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[//F_Log(THIS^, 'ATTACH_NEXT', next_object, 'BEFORE', _next_object);
+_SYS_COMP_next_object_ := _SYS_COMP_next_object;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="_SYS_COMP_parent" Id="{437f3545-ce38-43c6-b02f-a4145074acc5}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_parent : I_SYS_COMP_Object
+]]></Declaration>
+      <Get Name="Get" Id="{84f8e9a5-76f2-4680-8afd-1304ac58873c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_SYS_COMP_parent := _SYS_COMP_parent_;
+]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f830b01c-194f-462b-a8f3-971584009763}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF NOT _SYS_COMP_init_parent_ THEN
+	_SYS_COMP_parent_ := _SYS_COMP_parent;
+	_SYS_COMP_init_parent_ := TRUE;
+END_IF]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="_SYS_COMP_prev_object" Id="{10c530a9-d6df-4248-88f6-06f21b0a332b}">
+      <Declaration><![CDATA[PROPERTY _SYS_COMP_prev_object : I_SYS_COMP_Object
+]]></Declaration>
+      <Get Name="Get" Id="{9814f668-769a-40ac-af5f-e3b1321cb341}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_SYS_COMP_prev_object := _SYS_COMP_prev_object_;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{bc44125a-5e57-4859-862a-3d70c97a39dc}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[//F_Log(THIS^, 'ATTACH_PREV', prev_object, 'BEFORE', _prev_object);
+_SYS_COMP_prev_object_ := _SYS_COMP_prev_object;
+
+]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="_SYS_COMP_Remove_Child_" Id="{b85567f0-428d-4033-9ceb-814aa7fda98f}">
+      <Declaration><![CDATA[METHOD _SYS_COMP_Remove_Child_
+VAR_INPUT
+	IObject: I_SYS_COMP_Object;
+END_VAR
+VAR
+	_this_object: I_SYS_COMP_Object;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IObject = 0 THEN
+	//LOG
+	RETURN;
+END_IF
+
+IF _SYS_COMP_last_child_ = 0 THEN
+	//LOG
+	RETURN;
+END_IF
+
+_this_object := THIS^;
+IF IObject._SYS_COMP_parent <> _this_object THEN
+	//LOG
+	//Object from different parent
+	F_Log(IObject, 'IS NOT CHILD OF', THIS^, '', 0);
+	RETURN;
+END_IF
+
+F_Log(IObject, 'REMOVED FROM', THIS^, '', 0);
+
+IF IObject._SYS_COMP_next_object = 0 AND IObject._SYS_COMP_prev_object <> 0 THEN
+	_SYS_COMP_last_child_ := IObject._SYS_COMP_prev_object;
+	_SYS_COMP_last_child_._SYS_COMP_next_object := 0;
+	
+	_SYS_COMP_last_child_ := 0;
+	IObject._SYS_COMP_next_object := 0;
+	IObject._SYS_COMP_prev_object := 0;
+	//LOG
+	RETURN;
+END_IF
+
+IF IObject._SYS_COMP_next_object <> 0 AND IObject._SYS_COMP_prev_object <> 0 THEN
+	IObject._SYS_COMP_next_object._SYS_COMP_prev_object := IObject._SYS_COMP_prev_object;
+	IObject._SYS_COMP_prev_object._SYS_COMP_next_object := IObject._SYS_COMP_next_object;
+
+
+	IObject._SYS_COMP_next_object := 0;
+	IObject._SYS_COMP_prev_object := 0;
+	//LOG
+	RETURN;
+END_IF
+
+IF IObject._SYS_COMP_next_object <> 0 AND IObject._SYS_COMP_prev_object = 0 THEN
+	IObject._SYS_COMP_next_object._SYS_COMP_prev_object := 0;
+
+	IObject._SYS_COMP_next_object := 0;
+	IObject._SYS_COMP_prev_object := 0;
+	//LOG
+	RETURN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_exit" Id="{49363f26-d325-4b68-8bf5-f5addcd3f6cf}">
+      <Declaration><![CDATA[METHOD FB_exit : BOOL
+VAR_INPUT
+	bInCopyCode : BOOL; // if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _SYS_COMP_parent <> 0 THEN
+	_SYS_COMP_parent._SYS_COMP_Remove_Child_(THIS^);
+ELSE
+	_SYS_COMP_.Remove_Object(THIS^);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{2891dd86-7e51-4e31-9fa4-dd31ab22a7e3}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_SYS_COMP_.Add_Object(THIS^);
+_SYS_COMP_Find_Parent_();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Get_Child" Id="{015ee2ec-3ce6-4fb5-a58d-0ed31ae17fbf}">
+      <Declaration><![CDATA[METHOD Get_Child : I_Object
+VAR_INPUT
+	name: STRING;
+END_VAR
+VAR
+	IChild: I_Object;
+	ISYSChild: I_SYS_COMP_Object;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ISYSChild := _SYS_COMP_Get_Child(name);
+
+IF __QUERYINTERFACE(ISYSChild, IChild) THEN
+	Get_Child := IChild;
+ELSE
+	Get_Child := THIS^;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Get_Parent" Id="{5aae6db2-60a7-4bb4-99fc-3a8841d4958a}">
+      <Declaration><![CDATA[METHOD Get_Parent : I_Object
+VAR
+	IParent : I_Object;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF __QUERYINTERFACE(_SYS_COMP_parent_, IParent) THEN
+	Get_Parent := IParent;
+ELSE
+	Get_Parent := THIS^;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Refresh" Id="{58cdf0d1-79a5-4a27-be3b-569335ecb0ce}">
+      <Declaration><![CDATA[METHOD Refresh
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Object">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_Add_Child_">
+      <LineId Id="4" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="131" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="90" Count="1" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="99" Count="2" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="102" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_Find_Parent_">
+      <LineId Id="7" Count="2" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="84" Count="3" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_Get_Child">
+      <LineId Id="52" Count="13" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_Get_Object">
+      <LineId Id="72" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="212" Count="1" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="248" Count="0" />
+      <LineId Id="250" Count="0" />
+      <LineId Id="249" Count="0" />
+      <LineId Id="251" Count="0" />
+      <LineId Id="255" Count="3" />
+      <LineId Id="252" Count="1" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="236" Count="8" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="186" Count="1" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="190" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_last_child.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_next_object.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_next_object.Set">
+      <LineId Id="6" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_parent.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_parent.Set">
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_prev_object.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_prev_object.Set">
+      <LineId Id="20" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Object._SYS_COMP_Remove_Child_">
+      <LineId Id="8" Count="3" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="110" Count="4" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="77" Count="2" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="4" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="93" Count="2" />
+      <LineId Id="98" Count="4" />
+      <LineId Id="92" Count="0" />
+    </LineIds>
+    <LineIds Name="Object.FB_exit">
+      <LineId Id="6" Count="1" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Object.FB_init">
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Object.Get_Child">
+      <LineId Id="5" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="Object.Get_Parent">
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="Object.Refresh">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

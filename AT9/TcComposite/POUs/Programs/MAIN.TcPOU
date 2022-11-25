@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN" Id="{e6bb2c3e-4cb9-4dca-9990-7f3dc31798cf}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	rParam: I_Object;
+
+	_init: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT _init THEN
+	
+	F_Change_Param(
+		G.A1.Get_Child('B1').Get_Child('tB'),
+		'TRUE');
+		
+	rParam := G.A1.Get_Child('C1').Get_Child('tR');
+	F_Change_Param(rParam, '0.7');
+
+	
+	_init := TRUE;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN">
+      <LineId Id="94" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="188" Count="0" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="210" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="211" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="181" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
