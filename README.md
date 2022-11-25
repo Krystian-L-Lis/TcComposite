@@ -4,6 +4,7 @@ Twincat 3.1 Composite pattern project
 
 This is an experimental composite pattern project based on Twincat 3.1.
 I don't have much experience in traditional programming, so this approach may seem naive.
+I'm also new to GitHub, so I'm not sure if this repository will work.
 
 The main objectives of this program are:
   - For simplicity's sake any FB extending Object FB will also be called an object,
