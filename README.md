@@ -23,7 +23,8 @@ The main objectives of this program are:
     
     
  Planned features:
-  - Observer Pattern. 
+  - Observer Pattern.
+  
     Example: EL1008[4].Attach_Sub(GVL.Tank.Get_Child('lvl_low'));
     F_Attach_Sub(GVL.Pump.Get_Child('Pub'), GVL.Tank.Get_Child('pump'));
     
