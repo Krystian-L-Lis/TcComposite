@@ -9,17 +9,14 @@ VAR_OUTPUT
 END_VAR
 VAR
 	B1: B;
-	C1: C;
-	tT: BoolParam;
-	tU: UdintParam;
+	B2: B;
+	B3: B;
+
 	tR: RealParam;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <LineIds Name="A">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

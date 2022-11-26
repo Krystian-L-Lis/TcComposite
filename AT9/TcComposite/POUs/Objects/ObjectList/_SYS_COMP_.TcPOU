@@ -25,7 +25,7 @@ END_VAR]]></Declaration>
 	RETURN;
 END_IF
 
-Remove_Object(IObject);
+//Remove_Object(IObject);
 
 F_Log(IObject, 'ADDED TO', _object_list, '', 0);
 
@@ -91,7 +91,7 @@ IF IObject._SYS_COMP_prev_object = 0 AND IObject._SYS_COMP_next_object = 0 THEN
 END_IF
 
 IF IObject._SYS_COMP_parent <> 0 THEN
-	F_Log(IObject, 'IS NOT CHILD OF', _object_list, '', 0);
+	IObject._SYS_COMP_parent._SYS_COMP_Remove_Child_(IObject);
 	RETURN;
 END_IF
 
@@ -130,72 +130,5 @@ END_IF
 //LOG]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="_SYS_COMP_">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="_SYS_COMP_.Add_Object">
-      <LineId Id="22" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="24" Count="1" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="70" Count="1" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="_SYS_COMP_.Get_Object">
-      <LineId Id="44" Count="6" />
-      <LineId Id="61" Count="1" />
-      <LineId Id="52" Count="1" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
-    <LineIds Name="_SYS_COMP_.object_list.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="_SYS_COMP_.Remove_Object">
-      <LineId Id="107" Count="0" />
-      <LineId Id="109" Count="1" />
-      <LineId Id="196" Count="0" />
-      <LineId Id="195" Count="0" />
-      <LineId Id="197" Count="1" />
-      <LineId Id="204" Count="0" />
-      <LineId Id="203" Count="0" />
-      <LineId Id="211" Count="0" />
-      <LineId Id="205" Count="1" />
-      <LineId Id="194" Count="0" />
-      <LineId Id="193" Count="0" />
-      <LineId Id="136" Count="0" />
-      <LineId Id="135" Count="0" />
-      <LineId Id="138" Count="0" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="157" Count="0" />
-      <LineId Id="154" Count="2" />
-      <LineId Id="142" Count="0" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="139" Count="0" />
-      <LineId Id="143" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="161" Count="0" />
-      <LineId Id="181" Count="0" />
-      <LineId Id="162" Count="1" />
-      <LineId Id="144" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="164" Count="0" />
-      <LineId Id="145" Count="0" />
-      <LineId Id="167" Count="2" />
-      <LineId Id="171" Count="3" />
-      <LineId Id="176" Count="0" />
-      <LineId Id="165" Count="0" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="125" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -3,6 +3,7 @@
   <POU Name="Object" Id="{eae3f60c-edc7-4998-9538-a94122880021}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT Object EXTENDS Label IMPLEMENTS I_SYS_COMP_Object, I_Object
 VAR
+
 	{attribute 'no_copy'}
 	{attribute 'no_init'}
 	_SYS_COMP_next_object_: I_SYS_COMP_Object;
@@ -32,27 +33,29 @@ END_VAR
       <Declaration><![CDATA[METHOD _SYS_COMP_Add_Child_
 VAR_INPUT
 	IObject: I_SYS_COMP_Object;
-END_VAR
-VAR
-	_this_object: I_SYS_COMP_Object; //THIS^ can't be used as in IF statement
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[//Remove from current chain and add to parent chain
+
+
 
 IF IObject = 0 THEN
 	RETURN;
 END_IF
 
-_this_object := THIS^;
-IF IObject._SYS_COMP_parent <> 0 AND_THEN IObject._SYS_COMP_parent <> _this_object THEN
+IF IObject._SYS_COMP_parent <> 0 THEN
 	RETURN;
 END_IF
 
-_SYS_COMP_.Remove_Object(IObject);
+//_SYS_COMP_.Remove_Object(IObject);
 
 F_Log(IObject, 'ADDED TO', THIS^, '', 0);
 
+
+
 IObject._SYS_COMP_parent := THIS^;
+
+
 
 IF _SYS_COMP_last_child_ = 0 THEN
 	_SYS_COMP_last_child_ := IObject;
@@ -62,7 +65,9 @@ END_IF
 
 
 IObject._SYS_COMP_prev_object := _SYS_COMP_last_child_;
+
 _SYS_COMP_last_child_._SYS_COMP_next_object := IObject;
+
 
 _SYS_COMP_last_child_ := IObject;
 ]]></ST>
@@ -100,7 +105,6 @@ IF FIND(_name, _SYS_COMP_prev_object_.name) <> 0 THEN
 	//delete name after last dot and check if it matches previous sybling name
 	IF _SYS_COMP_prev_object_.name = _temp_name THEN
 		_SYS_COMP_prev_object_._SYS_COMP_Add_Child_(THIS^);
-		_SYS_COMP_parent := _SYS_COMP_prev_object_;
 		RETURN;
 	END_IF
 	
@@ -111,7 +115,6 @@ IF FIND(_name, _SYS_COMP_prev_object_.name) <> 0 THEN
 
 		IF _potential_parent <> _SYS_COMP_prev_object THEN
 			_potential_parent._SYS_COMP_Add_Child_(THIS^);
-			_SYS_COMP_parent := _potential_parent;
 			RETURN;	
 		END_IF
 		
@@ -163,11 +166,9 @@ VAR
 	_temp_name: STRING;
 	_IObject: I_SYS_COMP_Object;
 	_case: USINT;
-	_this_object: I_SYS_COMP_Object; //THIS^ can't be used as in IF statement
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[_temp_name := CONCAT(_name, '#');
-_this_object := THIS^;
 
 IF parent_name = '#' THEN
 	//FIND object ending with name# in any parent
@@ -187,7 +188,7 @@ CASE _case OF
 		END_IF
 		IF FIND(_temp_name, parent_name) <> 0 THEN
 			_IObject := _SYS_COMP_Get_Child(name);
-			IF _IObject <> _this_object AND _IObject <> 0 THEN
+			IF _IObject <> 0 AND_THEN _name <> _IObject.name THEN
 				_SYS_COMP_Get_Object := _IObject;
 				RETURN;
 			END_IF
@@ -198,7 +199,7 @@ CASE _case OF
 			RETURN;	
 		ELSE
 			_IObject := _SYS_COMP_Get_Child(name);
-			IF _IObject <> _this_object AND _IObject <> 0 THEN
+			IF _IObject <> 0 AND_THEN _name <> _IObject.name THEN
 				_SYS_COMP_Get_Object := _IObject;
 				RETURN;
 			END_IF
@@ -297,11 +298,7 @@ _SYS_COMP_prev_object_ := _SYS_COMP_prev_object;
       <Declaration><![CDATA[METHOD _SYS_COMP_Remove_Child_
 VAR_INPUT
 	IObject: I_SYS_COMP_Object;
-END_VAR
-VAR
-	_this_object: I_SYS_COMP_Object;
-END_VAR
-]]></Declaration>
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF IObject = 0 THEN
 	//LOG
@@ -313,8 +310,7 @@ IF _SYS_COMP_last_child_ = 0 THEN
 	RETURN;
 END_IF
 
-_this_object := THIS^;
-IF IObject._SYS_COMP_parent <> _this_object THEN
+IF IObject._SYS_COMP_parent <> 0 AND_THEN IObject._SYS_COMP_parent.name <> _name THEN
 	//LOG
 	//Object from different parent
 	F_Log(IObject, 'IS NOT CHILD OF', THIS^, '', 0);
@@ -362,11 +358,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF _SYS_COMP_parent <> 0 THEN
-	_SYS_COMP_parent._SYS_COMP_Remove_Child_(THIS^);
-ELSE
-	_SYS_COMP_.Remove_Object(THIS^);
-END_IF]]></ST>
+        <ST><![CDATA[//_SYS_COMP_.Remove_Object(THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="FB_init" Id="{2891dd86-7e51-4e31-9fa4-dd31ab22a7e3}">
@@ -427,207 +419,5 @@ END_VAR
         <ST><![CDATA[//User code. Called by children]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="Object">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_Add_Child_">
-      <LineId Id="142" Count="1" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="61" Count="0" />
-      <LineId Id="130" Count="0" />
-      <LineId Id="111" Count="0" />
-      <LineId Id="134" Count="1" />
-      <LineId Id="132" Count="0" />
-      <LineId Id="131" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="85" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="90" Count="1" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="92" Count="0" />
-      <LineId Id="99" Count="2" />
-      <LineId Id="98" Count="0" />
-      <LineId Id="102" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_Find_Parent_">
-      <LineId Id="109" Count="1" />
-      <LineId Id="112" Count="1" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="117" Count="1" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="116" Count="0" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="108" Count="0" />
-      <LineId Id="104" Count="1" />
-      <LineId Id="103" Count="0" />
-      <LineId Id="7" Count="2" />
-      <LineId Id="106" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="121" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="95" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="122" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="79" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="85" Count="2" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="29" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_Get_Child">
-      <LineId Id="72" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="73" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="52" Count="6" />
-      <LineId Id="76" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="77" Count="0" />
-      <LineId Id="60" Count="4" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_Get_Object">
-      <LineId Id="72" Count="0" />
-      <LineId Id="223" Count="0" />
-      <LineId Id="269" Count="0" />
-      <LineId Id="229" Count="0" />
-      <LineId Id="232" Count="0" />
-      <LineId Id="230" Count="0" />
-      <LineId Id="228" Count="0" />
-      <LineId Id="280" Count="0" />
-      <LineId Id="224" Count="0" />
-      <LineId Id="281" Count="2" />
-      <LineId Id="212" Count="1" />
-      <LineId Id="216" Count="0" />
-      <LineId Id="220" Count="0" />
-      <LineId Id="248" Count="0" />
-      <LineId Id="250" Count="0" />
-      <LineId Id="249" Count="0" />
-      <LineId Id="251" Count="0" />
-      <LineId Id="255" Count="3" />
-      <LineId Id="252" Count="1" />
-      <LineId Id="221" Count="0" />
-      <LineId Id="236" Count="8" />
-      <LineId Id="218" Count="0" />
-      <LineId Id="217" Count="0" />
-      <LineId Id="284" Count="1" />
-      <LineId Id="186" Count="1" />
-      <LineId Id="189" Count="0" />
-      <LineId Id="185" Count="0" />
-      <LineId Id="190" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_last_child.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_next_object.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_next_object.Set">
-      <LineId Id="6" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_parent.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_parent.Set">
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_prev_object.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_prev_object.Set">
-      <LineId Id="20" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="6" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Object._SYS_COMP_Remove_Child_">
-      <LineId Id="8" Count="3" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="63" Count="0" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="67" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="110" Count="4" />
-      <LineId Id="132" Count="0" />
-      <LineId Id="115" Count="0" />
-      <LineId Id="109" Count="0" />
-      <LineId Id="124" Count="0" />
-      <LineId Id="123" Count="0" />
-      <LineId Id="69" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="77" Count="2" />
-      <LineId Id="103" Count="1" />
-      <LineId Id="81" Count="0" />
-      <LineId Id="80" Count="0" />
-      <LineId Id="75" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="4" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="91" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="84" Count="0" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="93" Count="2" />
-      <LineId Id="98" Count="4" />
-      <LineId Id="92" Count="0" />
-    </LineIds>
-    <LineIds Name="Object.FB_exit">
-      <LineId Id="6" Count="1" />
-      <LineId Id="10" Count="1" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Object.FB_init">
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Object.Get_Child">
-      <LineId Id="36" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="25" Count="0" />
-    </LineIds>
-    <LineIds Name="Object.Get_Parent">
-      <LineId Id="21" Count="1" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="1" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="Object.Refresh">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
